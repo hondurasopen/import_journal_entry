@@ -23,25 +23,28 @@
     <notebook position="inside">
     <page string="Movimientos Importados" >
         <field name="line_ids">
-            <tree  decoration-success="processed == True" decoration-info="processed == False">
+            <tree editable="top"  decoration-success="is_ok == True" decoration-danger="is_ok == False">
                 <field name="description"/>
                 <field name="bank_transaction"/>
-                <field name="name"/>
+                <field name="document_number"/>
                 <field name="beneficiary"/>
                 <field name="document_date"/>
                 <field name="verified_document"/>
-                <field name="name"/>
                 <field name="account_id"/>
                 <field name="debit" />
                 <field name="credit" />
                 <field name="processed" />
+                <field name="is_ok" invisible="1"/>
             </tree>
     	</field>
     </page>
     <page string="Asientos Contables">
         <field name="move_ids">
-            <field name="move_id"/>
-            <field name="state"/>
+            <tree>
+                <field name="move_id"/>
+                <field name="ref"/>
+                <field name="state"/>
+            </tree>
         </field>
     </page>
     </notebook>
@@ -71,7 +74,7 @@
 
 <menuitem id="menu_import_journal_entries_root" 
     name="Importar Asientos" 
-    sequence="100" 
+    sequence="10" 
      parent="account.menu_finance" 
 />
 

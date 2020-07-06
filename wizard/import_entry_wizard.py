@@ -60,11 +60,18 @@ class ImportJournalEntry(models.TransientModel):
                 else:
                     account = account_id
 
-            val['parent_id'] = import_id.id
+            val["description"] = values["descripcion"]
+            val["bank_transaction"] = values["transaccion_banco"]
+            val["document_number"] = values["num_documento"]
+            val["beneficiary"] = values["beneficiario"]
+            val["document_date"] = values["fecha"]
+            val["verified_document"] = values["documento_fisico"]
             val['account_id'] = account.id
-            val['document_date'] = values['fecha']
-            val['name'] = values["documento"]
+            val['parent_id'] = import_id.id
             val['debit'] = values['debito']
             val['credit'] = values['credito']
             val['processed'] = False
-            import_line_obj.create(val)
+            validate = import_line_obj.create(val)
+            if validate:
+                if validate.account_id:
+                    validate.is_ok = True
