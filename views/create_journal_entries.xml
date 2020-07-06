@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="import_journal_entries_form_view" model="ir.ui.view">
+<field name="name">import.journal.entries.form.view</field>
+<field name="model">import.journal.entries</field>
+<field name="arch" type="xml">
+  <form string="Asientos de diarios">  
+    <header>
+        <button name="%(action_import_journal_entry_wizard)d" string="Importar archivo" class="oe_highlight" type="action" />
+        <button name="process_import_lines" string="Procesar Movimientos" class="oe_highlight" type="object" />
+        <field name="state" widget="statusbar"/> 
+    </header>    
+    <sheet>
+    <group>
+        <group>
+            <field name="name"/>
+        </group>
+        <group>
+            <field name="journal_id"/>
+        </group>
+    </group>    
+    <notebook position="inside">
+    <page string="Movimientos Importados" >
+        <field name="line_ids">
+            <tree  decoration-success="processed == True" decoration-info="processed == False">
+                <field name="description"/>
+                <field name="bank_transaction"/>
+                <field name="name"/>
+                <field name="beneficiary"/>
+                <field name="document_date"/>
+                <field name="verified_document"/>
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="debit" />
+                <field name="credit" />
+                <field name="processed" />
+            </tree>
+    	</field>
+    </page>
+    <page string="Asientos Contables">
+        <field name="move_ids">
+            <field name="move_id"/>
+            <field name="state"/>
+        </field>
+    </page>
+    </notebook>
+    </sheet>
+</form>
+</field>
+</record>
+
+
+<record id="import_journal_entries_tree_view" model="ir.ui.view">
+  <field name="name">import.journal.entries.tree.view</field>
+  <field name="model">import.journal.entries</field>
+  <field name="arch" type="xml">
+      <tree>
+        <field name="name"/> 
+        <field name="journal_id"/>
+        <field name="state"/>
+      </tree>
+    </field>      
+</record>
+
+<record id="action_import_journal_entriess" model="ir.actions.act_window">
+    <field name="name">Importar Asientos Contables</field>
+    <field name="res_model">import.journal.entries</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="menu_import_journal_entries_root" 
+    name="Importar Asientos" 
+    sequence="100" 
+     parent="account.menu_finance" 
+/>
+
+<menuitem id="menu_import_journal_entries_action" 
+    name="Importar Asientos por Diario" 
+    sequence="10" 
+    parent="menu_import_journal_entries_root" 
+    action="action_import_journal_entriess"/>
+
+</odoo>
