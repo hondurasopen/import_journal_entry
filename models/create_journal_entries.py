@@ -9,9 +9,44 @@ class ImportJournalEntry(models.Model):
     name = fields.Char("Descripción")
     journal_id = fields.Many2one("account.journal", "Diario", required=True)
     line_ids = fields.One2many("import.journal.entries.detail", "parent_id", "Detalle")
-    state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Validar Movimientos')], string="Estado", default='draft')
+    state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Realizado')], string="Estado", default='draft')
     move_ids = fields.One2many("import.journal.entries.created", "parent_id", "Detalle de asientos")
 
+    @api.multi
+    def unlink(self):
+        for move in self:
+            if not move.state == 'draft':
+                raise Warning(_('No puede eliminar registros en estado procesado o validado'))
+        return super(ImportJournalEntry, self).unlink()
+
+
+    @api.multi
+    def set_journal_entries_draft(self):
+        for move in self.move_ids:
+            move.move_id.write({'state': 'draft'})
+        self.write({'state': 'progress'})
+
+    @api.multi
+    def delete_journal_entries(self):
+        if self.move_ids:
+            for l in self.move_ids:
+                l.move_id.write({'state': 'draft'})
+                l.move_id.unlink()
+                l.unlink()
+            for l in self.line_ids:
+                l.processed = False
+
+        self.write({'state': 'draft'})
+
+
+    @api.multi
+    def valiate_journal_entries(self):
+        if self.move_ids:
+            for move in self.move_ids:
+                move.move_id.write({'state': 'draft'})
+                move.move_id.write({'state': 'posted'})
+                move.move_id.write({'name': str(move.document_number)})
+            self.write({'state': 'done'})
 
     @api.multi
     def process_import_lines(self):
@@ -74,7 +109,7 @@ class ImportJournalEntry(models.Model):
                                 id_move.verified_document = True
                                 id_move.document_number = line.document_number
 
-                            self.write({'state': 'progress'})
+                self.write({'state': 'progress'})
             else:
                 raise Warning(_('No ha establecido las cuentas en los diarios'))
 

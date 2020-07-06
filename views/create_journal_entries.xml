@@ -7,22 +7,25 @@
 <field name="arch" type="xml">
   <form string="Asientos de diarios">  
     <header>
-        <button name="%(action_import_journal_entry_wizard)d" string="Importar archivo" class="oe_highlight" type="action" />
-        <button name="process_import_lines" string="Procesar Movimientos" class="oe_highlight" type="object" />
+        <button name="%(action_import_journal_entry_wizard)d" string="Importar archivo" class="oe_highlight" type="action" states="draft"/>
+        <button name="process_import_lines" string="Procesar Movimientos" class="oe_highlight" type="object" states="draft"/>
+        <button name="valiate_journal_entries" string="Validar Movimientos" class="oe_highlight" type="object" states="progress"/>
+         <button name="delete_journal_entries" string="Reversar Movimientos" class="oe_highlight" type="object" states="progress"/>
+        <button name="set_journal_entries_draft" string="Establecer Asientos a Borrador" class="oe_highlight" type="object" states="done"/>
         <field name="state" widget="statusbar"/> 
     </header>    
     <sheet>
     <group>
         <group>
-            <field name="name"/>
+            <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
         </group>
         <group>
-            <field name="journal_id"/>
+            <field name="journal_id" attrs="{'readonly':[('state','!=','draft')]}"/>
         </group>
     </group>    
     <notebook position="inside">
     <page string="Movimientos Importados" >
-        <field name="line_ids">
+        <field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
             <tree editable="top"  decoration-success="is_ok == True" decoration-danger="is_ok == False">
                 <field name="description"/>
                 <field name="bank_transaction"/>
@@ -39,7 +42,7 @@
     	</field>
     </page>
     <page string="Asientos Contables">
-        <field name="move_ids">
+        <field name="move_ids" readonly="1">
             <tree>
                 <field name="move_id"/>
                 <field name="document_number"/>
