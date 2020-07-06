@@ -9,7 +9,7 @@ class ImportJournalEntry(models.Model):
     name = fields.Char("Descripción")
     journal_id = fields.Many2one("account.journal", "Diario", required=True)
     line_ids = fields.One2many("import.journal.entries.detail", "parent_id", "Detalle")
-    state = fields.Selection( [('draft', 'Borrador'), ('done', 'Hecho')], string="Estado", default='draft')
+    state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Validar Movimientos')], string="Estado", default='draft')
     move_ids = fields.One2many("import.journal.entries.created", "parent_id", "Detalle de asientos")
 
 
@@ -70,6 +70,11 @@ class ImportJournalEntry(models.Model):
                             }
                             move_line_obj.create(values)
                             line.processed = True
+                            if line.verified_document:
+                                id_move.verified_document = True
+                                id_move.document_number = line.document_number
+
+                            self.write({'state': 'progress'})
             else:
                 raise Warning(_('No ha establecido las cuentas en los diarios'))
 
@@ -104,3 +109,6 @@ class JournalEntriesCreated(models.Model):
     move_id = fields.Many2one("account.move", "Asiento")
     state = fields.Selection([('draft', 'Borrador'), ('done', 'Hecho')], string="Estado", related="move_id.state")
     ref = fields.Char("Referencia", related="move_id.ref")
+    verified_document = fields.Boolean("Documento fisico verificado", related="move_id.verified_document")
+    narration = fields.Text("Descripción", related="move_id.narration")
+    document_number = fields.Char("Número de documento", related="move_id.document_number")

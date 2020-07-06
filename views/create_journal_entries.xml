@@ -42,7 +42,10 @@
         <field name="move_ids">
             <tree>
                 <field name="move_id"/>
+                <field name="document_number"/>
                 <field name="ref"/>
+                <field name="narration"/>
+                <field name="verified_document"/>
                 <field name="state"/>
             </tree>
         </field>

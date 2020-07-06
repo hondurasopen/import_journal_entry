@@ -1,4 +1,4 @@
 
 from . import create_journal_entries
-#from . import priceslist_import
+from . import account_move
 #from . import priceslist_volumen
