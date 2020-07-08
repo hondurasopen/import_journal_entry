@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <odoo>
 
+
+<record id="action_import_journal_entries_created" model="ir.actions.act_window">
+    <field name="name">Asientos generados</field>
+    <field name="res_model">import.journal.entries.created</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain"> [ ('parent_id', '=', active_id)]</field>
+</record>
+
+
 <record id="import_journal_entries_form_view" model="ir.ui.view">
 <field name="name">import.journal.entries.form.view</field>
 <field name="model">import.journal.entries</field>
@@ -15,18 +24,27 @@
         <field name="state" widget="statusbar"/> 
     </header>    
     <sheet>
-    <group>
+        <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button"
+                 icon="fa-list-ol"
+                type="action" name="%(action_import_journal_entries_created)d"
+                string="Detalle de Movimientos">
+            </button>          
+        </div>
+        <group>
         <group>
             <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+            <field name="debit"/>
         </group>
         <group>
             <field name="journal_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+            <field name="credit"/>
         </group>
     </group>    
     <notebook position="inside">
     <page string="Movimientos Importados" >
         <field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
-            <tree editable="top"  decoration-success="is_ok == True" decoration-danger="is_ok == False">
+            <tree editable="top"  decoration-success="is_ok == True" decoration-danger="is_ok == False" >
                 <field name="description"/>
                 <field name="bank_transaction"/>
                 <field name="document_number"/>
@@ -34,8 +52,8 @@
                 <field name="document_date"/>
                 <field name="verified_document"/>
                 <field name="account_id"/>
-                <field name="debit" />
-                <field name="credit" />
+                <field name="debit" sum="Total"/>
+                <field name="credit" sum="Total"/>
                 <field name="processed" />
                 <field name="is_ok" invisible="1"/>
             </tree>
@@ -72,7 +90,7 @@
     </field>      
 </record>
 
-<record id="action_import_journal_entriess" model="ir.actions.act_window">
+<record id="action_import_journal_entries" model="ir.actions.act_window">
     <field name="name">Importar Asientos Contables</field>
     <field name="res_model">import.journal.entries</field>
     <field name="view_mode">tree,form</field>
@@ -88,6 +106,6 @@
     name="Importar Asientos por Diario" 
     sequence="10" 
     parent="menu_import_journal_entries_root" 
-    action="action_import_journal_entriess"/>
+    action="action_import_journal_entries"/>
 
 </odoo>

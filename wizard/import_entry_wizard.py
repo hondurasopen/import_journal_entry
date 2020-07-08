@@ -1,4 +1,4 @@
-
+# -*- encoding: utf-8 -*-
 from openerp import fields, models, exceptions, api, _
 import base64
 import csv

@@ -11,6 +11,8 @@ class ImportJournalEntry(models.Model):
     line_ids = fields.One2many("import.journal.entries.detail", "parent_id", "Detalle")
     state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Realizado')], string="Estado", default='draft')
     move_ids = fields.One2many("import.journal.entries.created", "parent_id", "Detalle de asientos")
+    debit = fields.Float("Débitos", readonly=True)
+    credit = fields.Float("Créditos", readonly=True)
 
     @api.multi
     def unlink(self):
@@ -35,6 +37,8 @@ class ImportJournalEntry(models.Model):
                 l.unlink()
             for l in self.line_ids:
                 l.processed = False
+            self.debit = 0
+            self.credit = 0
 
         self.write({'state': 'draft'})
 
@@ -48,12 +52,15 @@ class ImportJournalEntry(models.Model):
                 move.move_id.write({'name': str(move.document_number)})
             self.write({'state': 'done'})
 
+
     @api.multi
     def process_import_lines(self):
         if self.line_ids:
             if self.journal_id:
                 for line in self.line_ids:
                     if line.is_ok and  not line.processed:
+                        self.debit += line.debit
+                        self.credit += line.credit
                         move_obj = self.env["account.move"]
                         move_line_obj = self.env["import.journal.entries.created"]
                         lines = []
@@ -112,7 +119,6 @@ class ImportJournalEntry(models.Model):
                 self.write({'state': 'progress'})
             else:
                 raise Warning(_('No ha establecido las cuentas en los diarios'))
-
 
 
 
