@@ -49,7 +49,6 @@ class ImportJournalEntry(models.Model):
             for move in self.move_ids:
                 move.move_id.write({'state': 'draft'})
                 move.move_id.write({'state': 'posted'})
-                move.move_id.write({'name': str(move.document_number)})
             self.write({'state': 'done'})
 
 
@@ -114,7 +113,6 @@ class ImportJournalEntry(models.Model):
                             line.processed = True
                             if line.verified_document:
                                 id_move.verified_document = True
-                                id_move.document_number = line.document_number
 
                 self.write({'state': 'progress'})
             else:
