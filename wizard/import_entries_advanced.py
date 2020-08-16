@@ -7,8 +7,8 @@ from io import StringIO
 import io
 
 
-class ImportJournalEntry(models.TransientModel):
-    _name = 'import.journal.entry.wizard'
+class ImportJournalEntriesAdvanced(models.TransientModel):
+    _name = 'wizard.import.advanced'
 
 
     data = fields.Binary('File', required=True)
@@ -20,8 +20,8 @@ class ImportJournalEntry(models.TransientModel):
         """Load Inventory data from the CSV file."""
         ctx = self._context
         account_obj = self.env["account.account"]
-        import_obj = self.env['import.journal.entries']
-        import_line_obj = self.env['import.journal.entries.detail']
+        import_obj = self.env['import.journal.entries.advanced']
+        import_line_obj = self.env["journal.entries.csv.import"]
         if 'active_id' in ctx:
             import_id = import_obj.browse(ctx['active_id'])
         if not self.data:
@@ -60,12 +60,9 @@ class ImportJournalEntry(models.TransientModel):
                 else:
                     account = account_id
 
-            val["description"] = values["descripcion"]
-            val["bank_transaction"] = values["transaccion_banco"]
+            val["ref"] = values["descripcion"]
             val["document_number"] = values["num_documento"]
-            val["beneficiary"] = values["beneficiario"]
             val["document_date"] = values["fecha"]
-            val["verified_document"] = values["documento_fisico"]
             val['account_id'] = account.id
             val['parent_id'] = import_id.id
             val['debit'] = values['debito']

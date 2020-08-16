@@ -129,6 +129,7 @@ class ImportJournalEntryCSV(models.Model):
     credit = fields.Float("Crédito")
     processed = fields.Boolean("Procesado", defaul=False)
     is_ok = fields.Boolean("Linea Correcta", defaul=False)
+    ref = fields.Char("Referencia")
 
 
 
@@ -139,4 +140,3 @@ class JournalEntriesProcessed(models.Model):
     move_id = fields.Many2one("account.move", "Asiento")
     state = fields.Selection([('draft', 'Borrador'), ('done', 'Hecho')], string="Estado", related="move_id.state")
     ref = fields.Char("Referencia", related="move_id.ref")
-    narration = fields.Text("Descripción", related="move_id.narration")
