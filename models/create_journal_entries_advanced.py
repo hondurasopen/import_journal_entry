@@ -54,62 +54,61 @@ class ImportJournalEntryAdvanced(models.Model):
         if self.line_ids:
             if self.journal_id:
                 for line in self.line_ids:
-                    if line.is_ok and  not line.processed:
-                        self.debit += line.debit
-                        self.credit += line.credit
+                    if not line.processed:
+                        obj_same_line = self.env["journal.entries.csv.import"].search([('document_number', '=', line.document_number)])
                         move_obj = self.env["account.move"]
-                        move_line_obj = self.env["import.journal.entries.processed"]
-                        lines = []
-                        account_id = False
-                        if line.debit > 0:
-                            vals = {
-                                'debit': line.debit,
-                                'credit':0.0,
-                                'amount_currency': 0.0,
-                                'name': line.description,
-                                'account_id': line.account_id.id,
-                                'date': line.document_date,
-                            }
-                            lines.append((0, 0, vals))
-                            account_id = self.journal_id.default_credit_account_id.id
-                            
-                        if line.credit > 0:
-                            vals = {
-                                'debit': 0.0,
-                                'credit': line.credit,
-                                'amount_currency': 0.0,
-                                'name': line.description,
-                                'account_id': line.account_id.id,
-                                'date': line.document_date,
-                            }
-                            lines.append((0, 0, vals))
-                            account_id = self.journal_id.default_debit_account_id.id
-                        values = {
-                                'debit': line.credit, 
-                                'credit': line.debit,
-                                'amount_currency': 0.0,
-                                'name': line.description,
-                                'account_id': account_id,
-                                'date': line.document_date,
-                            }
-                        lines.append((0, 0, values))
-                        vals = {
-                            'journal_id': self.journal_id.id,
-                            'date': line.document_date,
-                            'ref': line.description + " - " + line.bank_transaction,
-                            'narration': line.description,
-                            'line_ids': lines,
-                        }
-                        id_move = move_obj.create(vals)
-                        if id_move:
+                        for l in obj_same_line:
+                            move_line_obj = self.env["import.journal.entries.processed"]
+                            lines = []
+                            account_id = False
+                            if l.debit > 0:
+                                vals = {
+                                    'debit': l.debit,
+                                    'credit':0.0,
+                                    'amount_currency': 0.0,
+                                    'name': l.ref,
+                                    'account_id': l.account_id.id,
+                                    'date': l.document_date,
+                                }
+                                lines.append((0, 0, vals))
+                                account_id = self.journal_id.default_credit_account_id.id
+                                
+                            if l.credit > 0:
+                                vals = {
+                                    'debit': 0.0,
+                                    'credit': l.credit,
+                                    'amount_currency': 0.0,
+                                    'name': l.ref,
+                                    'account_id': l.account_id.id,
+                                    'date': l.document_date,
+                                }
+                                lines.append((0, 0, vals))
+                                account_id = self.journal_id.default_debit_account_id.id
                             values = {
-                                'parent_id': self.id,
-                                'move_id': id_move.id
+                                    'debit': l.credit, 
+                                    'credit': l.debit,
+                                    'amount_currency': 0.0,
+                                    'name': l.description,
+                                    'account_id': account_id,
+                                    'date': l.document_date,
+                                }
+                            lines.append((0, 0, values))
+                            vals = {
+                                'journal_id': self.journal_id.id,
+                                'date': l.document_date,
+                                'ref': l.ref,
+                                'line_ids': lines,
                             }
-                            move_line_obj.create(values)
-                            line.processed = True
-                            if line.verified_document:
-                                id_move.verified_document = True
+                            id_move = move_obj.create(vals)
+                            if id_move:
+                                values = {
+                                    'parent_id': self.id,
+                                    'move_id': id_move.id
+                                }
+                                move_line_obj.create(values)
+                                l.processed = True
+                                self.debit += line.debit
+                                self.credit += line.credit
 
                 self.write({'state': 'progress'})
             else:

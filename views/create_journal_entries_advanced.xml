@@ -17,7 +17,7 @@
   <form string="Asientos de diarios">  
     <header>
         <button name="%(action_wizard_import_advanced)d" string="Importar archivo" class="oe_highlight" type="action" states="draft"/>
-        <button name="process_import_lines" string="Procesar Movimientos" class="oe_highlight" type="object" states="draft"/>
+        <button name="process_import_lines" string="Procesar registros" class="oe_highlight" type="object" states="draft"/>
         <button name="valiate_journal_entries" string="Validar Movimientos" class="oe_highlight" type="object" states="progress"/>
          <button name="delete_journal_entries" string="Reversar Movimientos" class="oe_highlight" type="object" states="progress"/>
         <button name="set_journal_entries_draft" string="Establecer Asientos a Borrador" class="oe_highlight" type="object" states="done"/>
