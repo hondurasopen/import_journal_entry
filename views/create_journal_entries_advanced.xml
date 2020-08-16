@@ -29,11 +29,12 @@
             <field name="debit"/>
         </group>
         <group>
+            <field name="journal_id" attrs="{'readonly':[('state','!=','draft')]}"/>
             <field name="credit"/>
         </group>
     </group>    
     <notebook position="inside">
-    <page string="Movimientos Importados" >
+    <page string="Registros Importados" >
         <field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
             <tree editable="top"  decoration-success="is_ok == True" decoration-danger="is_ok == False" >
                 <field name="document_number"/>
