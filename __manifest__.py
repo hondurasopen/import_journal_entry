@@ -17,6 +17,7 @@
         #"views/pricelist_volumen.xml",
         "wizard/import_entry_wizard.xml",
         "views/create_journal_entries.xml",
+        "views/create_journal_entries_advanced.xml",
     ],
     "installable": True,
 }
