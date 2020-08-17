@@ -37,7 +37,7 @@
     <notebook position="inside">
     <page string="Registros Importados" >
         <field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
-            <tree editable="top"  decoration-success="is_ok == True" decoration-danger="is_ok == False" >
+            <tree editable="top"  decoration-success="processed == True" decoration-danger="processed == False" >
                 <field name="ref"/>
                 <field name="document_number"/>
                 <field name="document_date"/>
@@ -45,7 +45,6 @@
                 <field name="debit" sum="Total"/>
                 <field name="credit" sum="Total"/>
                 <field name="processed" />
-                <field name="is_ok" invisible="1"/>
             </tree>
     	</field>
     </page>

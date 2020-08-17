@@ -107,8 +107,8 @@ class ImportJournalEntryAdvanced(models.Model):
                                 }
                                 move_line_obj.create(values)
                                 l.processed = True
-                                self.debit += line.debit
-                                self.credit += line.credit
+                                self.debit += l.debit
+                                self.credit += l.credit
 
                 self.write({'state': 'progress'})
             else:
@@ -127,7 +127,6 @@ class ImportJournalEntryCSV(models.Model):
     debit = fields.Float("Débito")
     credit = fields.Float("Crédito")
     processed = fields.Boolean("Procesado", defaul=False)
-    is_ok = fields.Boolean("Linea Correcta", defaul=False)
     ref = fields.Char("Referencia")
 
 
