@@ -12,26 +12,39 @@
                         <field name="data" filename="name" colspan="4" />
                     <notebook>
                         <page string="Parámetros de archivo">
+                        <p>Las lineas no deben de llevar tildes y caracteres propios de español como la "ñ". </p>
                         <table>
                             <tr>
-                                <th>Hoy</th>
-                                <th>Mañana</th>
-                                <th>Miércoles</th>
+                                <th>descripcion</th>
+                                <th>num_documento</th>
+                                <th>fecha</th>
+                                <th>cuenta</th>
+                                <th>debito</th>
+                                <th>credito</th>
                             </tr>
                             <tr>
-                                <td>Soleado</td>
-                                <td>Mayormente soleado</td>
-                                <td>Parcialmente nublado</td>
+                                <td>Descripción sin tilde</td>
+                                <td># Asiento 1</td>
+                                <td>16/08/2020</td>
+                                <td>1.1.01.01</td>
+                                <td>100</td>
+                                <td>0</td>
                             </tr>
                             <tr>
-                                <td>19°C</td>
-                                <td>17°C</td>
-                                <td>12°C</td>
+                                <td>Descripción sin tilde</td>
+                                <td># Asiento 1</td>
+                                <td>16/08/2020</td>
+                                <td>1.1.01.02</td>
+                                <td>0</td>
+                                <td>100</td>
                             </tr>
-                            <tr>
-                                <td>E 13 km/h</td>
-                                <td>E 11 km/h</td>
-                                <td>S 16 km/h</td>
+                             <tr>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
                             </tr>
                         </table>
                         </page>
