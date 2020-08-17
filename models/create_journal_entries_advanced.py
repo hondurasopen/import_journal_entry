@@ -85,10 +85,13 @@ class ImportJournalEntryAdvanced(models.Model):
                                     'date': l.document_date,
                                 }
                                 lines.append((0, 0, vals))
+                            l.processed = True
+                            self.debit += l.debit
+                            self.credit += l.credit
                         vals = {
                             'journal_id': self.journal_id.id,
-                            'date': l.document_date,
-                            'ref': l.ref,
+                            'date': line.document_date,
+                            'ref': line.ref,
                             'line_ids': lines,
                         }
                         id_move = move_obj.create(vals)
@@ -98,9 +101,6 @@ class ImportJournalEntryAdvanced(models.Model):
                                 'move_id': id_move.id
                             }
                             move_line_obj.create(values)
-                            l.processed = True
-                            self.debit += l.debit
-                            self.credit += l.credit
                             self.journal_entries_number += 1
                 self.write({'state': 'progress'})
             else:
