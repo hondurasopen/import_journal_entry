@@ -12,16 +12,39 @@
                         <field name="data" filename="name" colspan="4" />
                     <notebook>
                         <page string="Parámetros de archivo">
-                        <table  border="2px">
+                        <table>
                             <tr>
-                                <th>descripcion</th>
-                                <th>num_documento</th>
-                                <th>fecha</th>
-                                <th>cuenta</th>
-                                <th>debito</th>
-                                <th>credito</th>
+                                <th>descripcion </th>
+                                <th>num_documento </th>
+                                <th>fecha </th>
+                                <th>cuenta </th>
+                                <th>debito </th>
+                                <th>credito </th>
                             </tr>
-
+                            <tr>
+                                <td>Referencia</td>
+                                <td># Asiento 1</td>
+                                <td>16/08/2020</td>
+                                <td>1.1.01.01</td>
+                                <td>100</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Referencia</td>
+                                <td># Asiento 1</td>
+                                <td>16/08/2020</td>
+                                <td>1.1.01.02</td>
+                                <td>0</td>
+                                <td>100</td>
+                            </tr>
+                             <tr>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                            </tr>
                         </table>
                         </page>
                     </notebook>
