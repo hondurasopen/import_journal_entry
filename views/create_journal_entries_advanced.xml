@@ -49,6 +49,14 @@
     	</field>
     </page>
     <page string="Asientos Contables">
+        <group>
+            <group>
+                <field name="journal_entries_number"/>
+            </group>
+            <group>
+
+            </group>
+        </group>
         <field name="move_ids" readonly="1">
             <tree>
                 <field name="move_id"/>

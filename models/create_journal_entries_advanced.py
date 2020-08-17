@@ -16,6 +16,7 @@ class ImportJournalEntryAdvanced(models.Model):
     move_ids = fields.One2many("import.journal.entries.processed", "parent_id", "Asientos procesados")
     debit = fields.Float("Débitos", readonly=True)
     credit = fields.Float("Créditos", readonly=True)
+    journal_entries_number = fields.Integer("Asientos generados", readonly=1)
 
     @api.multi
     def unlink(self):
@@ -41,6 +42,7 @@ class ImportJournalEntryAdvanced(models.Model):
                 l.processed = False
             self.debit = 0
             self.credit = 0
+            self.journal_entries_number = 0
 
         self.write({'state': 'draft'})
 
@@ -112,6 +114,7 @@ class ImportJournalEntryAdvanced(models.Model):
                                 l.processed = True
                                 self.debit += l.debit
                                 self.credit += l.credit
+                                self.journal_entries_number += 1
 
                 self.write({'state': 'progress'})
             else:
