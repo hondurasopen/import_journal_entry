@@ -62,10 +62,9 @@ class ImportJournalEntryAdvanced(models.Model):
                     if not line.processed:
                         obj_same_line = self.env["journal.entries.csv.import"].search([('document_number', '=', line.document_number)])
                         move_obj = self.env["account.move"]
-                        for l in obj_same_line:
-                            move_line_obj = self.env["import.journal.entries.processed"]
-                            lines = []
-                            account_id = False
+                        move_line_obj = self.env["import.journal.entries.processed"]
+                        lines = []
+                        for l in obj_same_line:    
                             if l.debit > 0:
                                 vals = {
                                     'debit': l.debit,
@@ -86,23 +85,23 @@ class ImportJournalEntryAdvanced(models.Model):
                                     'date': l.document_date,
                                 }
                                 lines.append((0, 0, vals))
-                            vals = {
-                                'journal_id': self.journal_id.id,
-                                'date': l.document_date,
-                                'ref': l.ref,
-                                'line_ids': lines,
+                        vals = {
+                            'journal_id': self.journal_id.id,
+                            'date': l.document_date,
+                            'ref': l.ref,
+                            'line_ids': lines,
+                        }
+                        id_move = move_obj.create(vals)
+                        if id_move:
+                            values = {
+                                'parent_id': self.id,
+                                'move_id': id_move.id
                             }
-                            id_move = move_obj.create(vals)
-                            if id_move:
-                                values = {
-                                    'parent_id': self.id,
-                                    'move_id': id_move.id
-                                }
-                                move_line_obj.create(values)
-                                l.processed = True
-                                self.debit += l.debit
-                                self.credit += l.credit
-                                self.journal_entries_number += 1
+                            move_line_obj.create(values)
+                            l.processed = True
+                            self.debit += l.debit
+                            self.credit += l.credit
+                            self.journal_entries_number += 1
                 self.write({'state': 'progress'})
             else:
                 raise Warning(_('No ha establecido las cuentas en los diarios'))
