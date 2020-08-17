@@ -88,7 +88,7 @@ class ImportJournalEntryAdvanced(models.Model):
                                     'debit': l.credit, 
                                     'credit': l.debit,
                                     'amount_currency': 0.0,
-                                    'name': l.description,
+                                    'name': l.ref,
                                     'account_id': account_id,
                                     'date': l.document_date,
                                 }
