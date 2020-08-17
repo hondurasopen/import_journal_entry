@@ -76,8 +76,6 @@ class ImportJournalEntryAdvanced(models.Model):
                                     'date': l.document_date,
                                 }
                                 lines.append((0, 0, vals))
-                                account_id = self.journal_id.default_credit_account_id.id
-                                
                             if l.credit > 0:
                                 vals = {
                                     'debit': 0.0,
@@ -88,16 +86,6 @@ class ImportJournalEntryAdvanced(models.Model):
                                     'date': l.document_date,
                                 }
                                 lines.append((0, 0, vals))
-                                account_id = self.journal_id.default_debit_account_id.id
-                            values = {
-                                    'debit': l.credit, 
-                                    'credit': l.debit,
-                                    'amount_currency': 0.0,
-                                    'name': l.ref,
-                                    'account_id': account_id,
-                                    'date': l.document_date,
-                                }
-                            lines.append((0, 0, values))
                             vals = {
                                 'journal_id': self.journal_id.id,
                                 'date': l.document_date,
@@ -115,7 +103,6 @@ class ImportJournalEntryAdvanced(models.Model):
                                 self.debit += l.debit
                                 self.credit += l.credit
                                 self.journal_entries_number += 1
-
                 self.write({'state': 'progress'})
             else:
                 raise Warning(_('No ha establecido las cuentas en los diarios'))
