@@ -1,12 +1,15 @@
 # -*- encoding: utf-8 -*-
 from odoo import models, fields, api,_
 from odoo.exceptions import except_orm, Warning, RedirectWarning
+from datetime import *
 
 
 class ImportJournalEntryAdvanced(models.Model):
     _name = "import.journal.entries.advanced"
+    _rec_name = "date"
 
     name = fields.Char("Descripción")
+    date = fields.Date("Fecha Registro", default=fields.Date.context_today)
     journal_id = fields.Many2one("account.journal", "Diario", required=True)
     line_ids = fields.One2many("journal.entries.csv.import", "parent_id", "Asientos importados")
     state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Movimientos Validados')], string="Estado", default='draft')

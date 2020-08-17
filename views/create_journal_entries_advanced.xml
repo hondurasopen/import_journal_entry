@@ -26,7 +26,7 @@
     <sheet>
     <group>
         <group>
-            <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+            <field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
             <field name="debit"/>
         </group>
         <group>
