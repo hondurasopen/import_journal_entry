@@ -12,7 +12,6 @@
                         <field name="data" filename="name" colspan="4" />
                     <notebook>
                         <page string="Parámetros de archivo">
-                        <p>Las lineas no deben de llevar tildes y caracteres propios de español como la "ñ". </p>
                         <table>
                             <tr>
                                 <th>descripcion</th>
