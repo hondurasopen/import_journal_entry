@@ -8,30 +8,39 @@ class ImportJournalEntryAdvanced(models.Model):
     _name = "import.journal.entries.advanced"
     _rec_name = "date"
 
+
+    @api.depends('line_ids.debit', 'line_ids.credit')
+    def _get_total_saldo(self):
+        if self.line_ids:
+            for l in self.line_ids:
+                self.debit += l.debit
+                self.credit += l.credit
+
+
     name = fields.Char("Descripción")
     date = fields.Date("Fecha Registro", default=fields.Date.context_today)
     journal_id = fields.Many2one("account.journal", "Diario", required=True)
     line_ids = fields.One2many("journal.entries.csv.import", "parent_id", "Asientos importados")
     state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Movimientos Validados')], string="Estado", default='draft')
     move_ids = fields.One2many("import.journal.entries.processed", "parent_id", "Asientos procesados")
-    debit = fields.Float("Débitos", readonly=True)
-    credit = fields.Float("Créditos", readonly=True)
+    debit = fields.Float("Débitos", readonly=True, compute='_get_total_saldo')
+    credit = fields.Float("Créditos", readonly=True, compute='_get_total_saldo')
     journal_entries_number = fields.Integer("Asientos generados", readonly=1)
 
-    @api.multi
+
     def unlink(self):
         for move in self:
             if not move.state == 'draft':
                 raise Warning(_('No puede eliminar registros en estado procesado o validado'))
-        return super(ImportJournalEntry, self).unlink()
+        return super(ImportJournalEntryAdvanced, self).unlink()
 
-    @api.multi
+
     def set_journal_entries_draft(self):
         for move in self.move_ids:
             move.move_id.write({'state': 'draft'})
         self.write({'state': 'progress'})
 
-    @api.multi
+
     def delete_journal_entries(self):
         if self.move_ids:
             for l in self.move_ids:
@@ -46,7 +55,7 @@ class ImportJournalEntryAdvanced(models.Model):
 
         self.write({'state': 'draft'})
 
-    @api.multi
+ 
     def valiate_journal_entries(self):
         if self.move_ids:
             for move in self.move_ids:
@@ -54,7 +63,7 @@ class ImportJournalEntryAdvanced(models.Model):
                 move.move_id.write({'state': 'posted'})
             self.write({'state': 'done'})
 
-    @api.multi
+
     def process_import_lines(self):
         if self.line_ids:
             if self.journal_id:
@@ -120,7 +129,6 @@ class ImportJournalEntryCSV(models.Model):
     credit = fields.Float("Crédito")
     processed = fields.Boolean("Procesado", defaul=False)
     ref = fields.Char("Referencia")
-
 
 
 class JournalEntriesProcessed(models.Model):

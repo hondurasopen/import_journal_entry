@@ -96,10 +96,16 @@
     <field name="view_mode">tree,form</field>
 </record>
 
+<menuitem id="menu_root_dec_hn" 
+        name="DEC" 
+        sequence="1" 
+        web_icon="import_journal_entry,static/description/icon.png"/>
+
+
 <menuitem id="menu_import_journal_entries_root" 
     name="Importar Asientos" 
     sequence="10" 
-     parent="account.menu_finance" 
+     parent="menu_root_dec_hn" 
 />
 
 <menuitem id="menu_import_journal_entries_action" 

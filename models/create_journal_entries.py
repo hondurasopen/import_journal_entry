@@ -14,7 +14,7 @@ class ImportJournalEntry(models.Model):
     debit = fields.Float("Débitos", readonly=True)
     credit = fields.Float("Créditos", readonly=True)
 
-    @api.multi
+ 
     def unlink(self):
         for move in self:
             if not move.state == 'draft':
@@ -22,13 +22,13 @@ class ImportJournalEntry(models.Model):
         return super(ImportJournalEntry, self).unlink()
 
 
-    @api.multi
+  
     def set_journal_entries_draft(self):
         for move in self.move_ids:
             move.move_id.write({'state': 'draft'})
         self.write({'state': 'progress'})
 
-    @api.multi
+  
     def delete_journal_entries(self):
         if self.move_ids:
             for l in self.move_ids:
@@ -43,7 +43,6 @@ class ImportJournalEntry(models.Model):
         self.write({'state': 'draft'})
 
 
-    @api.multi
     def valiate_journal_entries(self):
         if self.move_ids:
             for move in self.move_ids:
@@ -52,7 +51,7 @@ class ImportJournalEntry(models.Model):
             self.write({'state': 'done'})
 
 
-    @api.multi
+   
     def process_import_lines(self):
         if self.line_ids:
             if self.journal_id:

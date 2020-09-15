@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     "name": "Import journal entry from CSV file",
-    "version": "11",
+    "version": "13.01",
     "category": "Generic Modules",
     "author": "César Alejandro Rodriguez",
     "depends": [

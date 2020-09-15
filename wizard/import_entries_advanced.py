@@ -5,6 +5,7 @@ import csv
 from io import BytesIO
 from io import StringIO
 import io
+from datetime import datetime
 
 
 class ImportJournalEntriesAdvanced(models.TransientModel):
@@ -15,7 +16,7 @@ class ImportJournalEntriesAdvanced(models.TransientModel):
     name = fields.Char('Filename')
     delimeter = fields.Char('Delimeter', default=',', help='Por defecto el delimitador es","')
 
-    @api.multi
+
     def action_import(self):
         """Load Inventory data from the CSV file."""
         ctx = self._context
@@ -27,7 +28,7 @@ class ImportJournalEntriesAdvanced(models.TransientModel):
         if not self.data:
             raise exceptions.Warning(_("Necesitas seleccionar un archivo!"))
         # Decode the file data
-        data = base64.b64decode(self.data).decode()
+        data = base64.b64decode(self.data).decode('utf-8')
         file_input = StringIO(data)
         file_input.seek(0)
         reader_info = []
@@ -62,7 +63,7 @@ class ImportJournalEntriesAdvanced(models.TransientModel):
 
             val["ref"] = values["descripcion"]
             val["document_number"] = values["num_documento"]
-            val["document_date"] = values["fecha"]
+            val["document_date"] = datetime.strptime(values["fecha"] , "%d-%m-%Y")
             val['account_id'] = account.id
             val['parent_id'] = import_id.id
             val['debit'] = values['debito']

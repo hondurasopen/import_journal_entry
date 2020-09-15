@@ -62,9 +62,8 @@
     <record id="action_wizard_import_advanced" model="ir.actions.act_window">
         <field name="name">Importar Asientos</field>
         <field name="res_model">wizard.import.advanced</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-       <field name="view_id" ref="wizard_import_advanced_form_view"/>
+        <field name="view_id" ref="wizard_import_advanced_form_view"/>
        <field name="target">new</field>
     </record>
 
