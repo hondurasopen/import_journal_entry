@@ -8,6 +8,7 @@
         "account",
     ],
     "data": [
+        "security/groups.xml",
         #"security/ir.model.access.csv",
         #"wizard/import_pricelist_view.xml",
         #"wizard/import_inventory_view.xml",

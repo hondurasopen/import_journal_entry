@@ -12,9 +12,10 @@ class ImportJournalEntryAdvanced(models.Model):
     @api.depends('line_ids.debit', 'line_ids.credit')
     def _get_total_saldo(self):
         if self.line_ids:
-            for l in self.line_ids:
-                self.debit += l.debit
-                self.credit += l.credit
+            for importardo in self:
+                for l in importardo.line_ids:
+                    importardo.debit += l.debit
+                    importardo.credit += l.credit
 
 
     name = fields.Char("Descripción")
@@ -23,8 +24,8 @@ class ImportJournalEntryAdvanced(models.Model):
     line_ids = fields.One2many("journal.entries.csv.import", "parent_id", "Asientos importados")
     state = fields.Selection( [('draft', 'Borrador'), ('progress', 'Movimientos en Proceso'), ('done', 'Movimientos Validados')], string="Estado", default='draft')
     move_ids = fields.One2many("import.journal.entries.processed", "parent_id", "Asientos procesados")
-    debit = fields.Float("Débitos", readonly=True, compute='_get_total_saldo')
-    credit = fields.Float("Créditos", readonly=True, compute='_get_total_saldo')
+    debit = fields.Float("Débitos", readonly=True, compute='_get_total_saldo', store=True)
+    credit = fields.Float("Créditos", readonly=True, compute='_get_total_saldo', store=True)
     journal_entries_number = fields.Integer("Asientos generados", readonly=1)
 
 
@@ -102,6 +103,7 @@ class ImportJournalEntryAdvanced(models.Model):
                             'date': line.document_date,
                             'ref': line.ref,
                             'line_ids': lines,
+                            'type': 'entry',
                         }
                         id_move = move_obj.create(vals)
                         if id_move:
@@ -111,6 +113,8 @@ class ImportJournalEntryAdvanced(models.Model):
                             }
                             move_line_obj.create(values)
                             self.journal_entries_number += 1
+                        else:
+                            raise Warning(_('No se puede crear movimiento contable'))
                 self.write({'state': 'progress'})
             else:
                 raise Warning(_('No ha establecido las cuentas en los diarios'))
